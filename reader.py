@@ -22,7 +22,7 @@ def read_subjects_csv(path):
 def parse_codes(field):
     if not field or field.strip() == "":
         return []
-    return [code.strip() for code in field.split(",")]
+    return [code.strip() for code in field.split(";")]
 
 def parse_time(field):
     if not field or field.strip() == "":
@@ -30,7 +30,7 @@ def parse_time(field):
     
     schedules = []
 
-    for block in field.split(","):
+    for block in field.split(";"):
         block = block.strip()
 
         i = 0

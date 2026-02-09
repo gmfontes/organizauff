@@ -8,3 +8,5 @@ if len(sys.argv) < 2:
 csv_path = sys.argv[1]
 
 subjects = read_subjects_csv(csv_path)
+
+print(subjects["MMO00083"])
