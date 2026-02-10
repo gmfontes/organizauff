@@ -8,14 +8,14 @@ def read_subjects_csv(path):
 
         for row in reader:
             code = row["CODE"].strip()
-            
-            subjects[code] = {
+
+            subjects.setdefault(code, []).append({
                 "period": int(row["PERIOD"].strip()),
                 "name": row["NAME"].strip(),
                 "prerequisite": parse_codes(row["PREREQUISITE"].strip()),
                 "corequisite": parse_codes(row["COREQUISITE"].strip()),
                 "time": parse_time(row["TIME"].strip())
-            }
+            })
 
     return subjects
 

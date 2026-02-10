@@ -1,12 +1,52 @@
-import sys
-from reader import read_subjects_csv
+import sys, json
+from pathlib import Path
+from PySide6.QtWidgets import QApplication
+from PySide6.QtWebEngineWidgets import QWebEngineView
+from PySide6.QtWebChannel import QWebChannel
+from PySide6.QtCore import QObject, Slot, QUrl
 
-if len(sys.argv) < 2:
-    print("Insira o caminho do arquivo .csv")
-    sys.exit(1)
+from src.reader import read_subjects_csv
 
-csv_path = sys.argv[1]
+# ---------- caminhos ----------
+BASE_DIR = Path(__file__).resolve().parent
+CSV_PATH = BASE_DIR / "data" / "database.csv"
+HTML_PATH = BASE_DIR / "src" / "styles" / "index.html"
 
-subjects = read_subjects_csv(csv_path)
+# ---------- backend exposto ao JS ----------
+class Backend(QObject):
+    def __init__(self, subjects_by_period):
+        super().__init__()
+        self.data = subjects_by_period
 
-print(subjects["MMO00083"])
+    @Slot(result=str)
+    def getSubjects(self):
+        return json.dumps(self.data, ensure_ascii=False)
+
+# ---------- prepara dados ----------
+subjects = read_subjects_csv(CSV_PATH)
+
+periods = {}
+for code, occurrences in subjects.items():
+    for i, subj in enumerate(occurrences):
+        period = subj["period"]
+        periods.setdefault(period, []).append({
+            "id": f"{code}_{i}",
+            "code": code,
+            "name": subj["name"]
+        })
+
+# ---------- app ----------
+app = QApplication(sys.argv)
+
+view = QWebEngineView()
+channel = QWebChannel()
+backend = Backend(periods)
+
+channel.registerObject("backend", backend)
+view.page().setWebChannel(channel)
+
+view.load(QUrl.fromLocalFile(str(HTML_PATH)))
+view.resize(1400, 900)
+view.show()
+
+sys.exit(app.exec())
