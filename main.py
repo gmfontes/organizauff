@@ -32,7 +32,9 @@ for code, occurrences in subjects.items():
         periods.setdefault(period, []).append({
             "id": f"{code}_{i}",
             "code": code,
-            "name": subj["name"]
+            "name": subj["name"],
+            "period": period,
+            "prerequisites": subj["prerequisite"]
         })
 
 # ---------- app ----------
