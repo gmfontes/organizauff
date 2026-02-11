@@ -1,15 +1,35 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Grade Curricular</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>OrganizaUFF</title>
+
+  <!-- Qt WebChannel -->
   <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="container"></div>
+  <aside>
+    <h1>OrganizaUFF</h1>
 
-<script src="app.js"></script>
+    <label>
+      <input type="radio" name="mode" checked>
+      Visualizar grade
+    </label>
+
+    <label>
+      <input type="radio" name="mode">
+      Marcar matérias cursadas
+    </label>
+
+    <button id="finishBtn">Pronto</button>
+  </aside>
+
+  <main id="curriculum"></main>
+
+  <script src="app.js"></script>
 </body>
 </html>
